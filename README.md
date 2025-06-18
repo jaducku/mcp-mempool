@@ -107,7 +107,7 @@ RELOAD=false                          # 자동 재시작
   "mcpServers": {
     "mcp-mempool": {
       "transport": "streamable-http",
-      "url" : "http://127.0.0.1:8000/mcp" --배포시 실제 서빙 url
+      "url" : "http://127.0.0.1:8000/mcp" //배포시 실제 서빙 url
     }
   }
 }
