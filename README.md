@@ -203,7 +203,7 @@ WebSocket 연결 상태를 확인합니다.
 
 ```bash
 # MCP 클라이언트에서 사용
-get_address_balance address="bc1qhztsuhhf422u5yd4g3fsmwmx5nwjjhnl2ksvry"
+get_address_balance address="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
 ```
 
 ### 실시간 수수료 모니터링
@@ -220,7 +220,7 @@ get_recommended_fees
 
 ```bash
 # 특정 주소 실시간 추적
-track_address address="bc1qhztsuhhf422u5yd4g3fsmwmx5nwjjhnl2ksvry"
+track_address address="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
 ```
 
 ## 🏗 개발
