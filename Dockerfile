@@ -1,38 +1,8 @@
 # ==================================================
-# 멀티스테이지 빌드를 통한 Docker 이미지 최적화
+# 간단한 프로덕션용 Docker 이미지
 # ==================================================
 
-# 빌드 스테이지
-FROM python:3.11-slim as builder
-
-# 빌드 도구 설치
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# uv 설치 (빠른 Python 패키지 매니저)
-RUN pip install --no-cache-dir uv
-
-# 작업 디렉토리 설정
-WORKDIR /app
-
-# 의존성 파일만 먼저 복사 (Docker 레이어 캐싱 최적화)
-COPY pyproject.toml uv.lock ./
-
-# 의존성 설치 (프로덕션 의존성만)
-RUN uv sync --frozen --no-dev
-
-# 소스코드 복사
-COPY src/ ./src/
-COPY README.md ./
-
-# 애플리케이션 빌드/설치
-RUN uv build
-
-# ==================================================
-# 프로덕션 스테이지
-FROM python:3.11-slim as production
+FROM python:3.11-slim
 
 # 시스템 업데이트 및 필수 도구 설치
 RUN apt-get update && apt-get install -y \
@@ -52,15 +22,23 @@ RUN groupadd -g $GID appuser && \
 # 작업 디렉토리 설정
 WORKDIR /app
 
-# uv 설치
-RUN pip install --no-cache-dir uv
+# 직접적인 의존성 설치
+RUN pip install --no-cache-dir \
+    fastmcp>=2.0.0 \
+    websockets>=12.0 \
+    aiohttp>=3.9.0 \
+    pydantic>=2.0.0 \
+    uvicorn[standard]>=0.24.0 \
+    prometheus-client>=0.19.0 \
+    structlog>=23.0.0 \
+    tenacity>=8.2.0 \
+    fastapi>=0.104.0
 
-# 빌드 스테이지에서 가상환경과 애플리케이션 복사
-COPY --from=builder /app/.venv /app/.venv
-COPY --from=builder /app/src /app/src
+# 소스코드 복사
+COPY src/ ./src/
+COPY README.md ./
 
 # 환경변수 설정
-ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONPATH="/app/src:$PYTHONPATH"
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -81,7 +59,7 @@ USER appuser
 # 포트 노출
 EXPOSE $MCP_PORT
 
-# 헬스체크 설정 (개선된 버전)
+# 헬스체크 설정
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:$MCP_PORT/health || exit 1
 
