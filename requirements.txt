@@ -1,0 +1,17 @@
+# MCP 서버 핵심 의존성
+fastmcp>=1.0.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# WebSocket 관련
+websockets>=11.0.0,<12.0.0
+aiohttp>=3.9.0
+
+# 데이터 모델링 및 검증
+pydantic>=2.0.0
+
+# 로깅 및 모니터링
+structlog>=23.0.0
+
+# 재시도 및 복원력
+tenacity>=8.2.0 
