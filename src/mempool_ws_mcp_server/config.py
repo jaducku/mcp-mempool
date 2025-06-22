@@ -8,7 +8,7 @@ class Config:
     """애플리케이션 설정 클래스."""
     
     # 서버 설정
-    HOST: str = os.getenv("MCP_HOST", "0.0.0.0")
+    HOST: str = os.getenv("MCP_HOST", "127.0.0.1")
     PORT: int = int(os.getenv("MCP_PORT", "8000"))
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO").upper()
     

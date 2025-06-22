@@ -344,4 +344,14 @@ async def initialize_websocket():
 
 def create_mcp_server() -> FastMCP:
     """MCP 서버 인스턴스를 반환합니다."""
+    # CORS 설정을 위한 옵션 추가
+    if hasattr(mcp, 'configure'):
+        # FastMCP에 CORS 설정이 있다면 적용
+        mcp.configure(
+            cors=True,
+            cors_origins=["*"],
+            cors_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            cors_headers=["*"]
+        )
+    
     return mcp 
